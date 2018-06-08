@@ -24,78 +24,78 @@
  *    - The funciton doesn't cause side effects. It doesn't cause change beyond its scope.
  *    - Given the same input, the function will always return the same out put
  */
+(function() {
+  /** FN ex.2 -Pure Functions, -Avoid side effects
+   */
+  let increment = function(num) {
+    return num + 1;
+  };
+  increment(3);
 
-/** FN ex.2 -Pure Functions, -Avoid side effects
- */
-let increment = function(num) {
-  return num + 1;
-};
-increment(3);
+  /** FN ex.1 -Pure Functions, -Avoid side effects
+   * variable chage value
+   * but that variable defiend inside scope
+   * and give the same input the function will always
+   * return the same output
+   */
+  let average = function(scores) {
+    var total = 0;
+    for (let i = 0; i < scores.length; i++) {
+      total += scores[i];
+    }
+    return total / scores.length;
+  };
+  average([40, 30, 20, 50, 79]);
 
-/** FN ex.1 -Pure Functions, -Avoid side effects
- * variable chage value
- * but that variable defiend inside scope
- * and give the same input the function will always
- * return the same output
- */
-let average = function(scores) {
-  var total = 0;
-  for (let i = 0; i < scores.length; i++) {
-    total += scores[i];
-  }
-  return total / scores.length;
-};
-average([40, 30, 20, 50, 79]);
+  /** FN ex.3 -Pure Functions, -Avoid side effects
+   * have vareable outside scope
+   * but that value is constant(cann't change)
+   */
+  const val = 5;
+  let mutBy5 = function(number) {
+    return number * val;
+  };
 
-/** FN ex.3 -Pure Functions, -Avoid side effects
- * have vareable outside scope
- * but that value is constant(cann't change)
- */
-const val = 5;
-let mutBy5 = function(number) {
-  return number * val;
-};
+  /** AVOIDING SHARED STATE ----------------------------
+   * What is state
+   *  - A JS program stores data in variables and object.
+   *    The constents of these storage locations at any given moment
+   *    while the program is running is considered its state
+   * What is shared state
+   *  - shared state is any variable object, or memory sace that
+   *    exists in a shared scope or as the property of an object
+   *    being passed between scopes.
+   *    A shared scope can include global scope or closore scops.
+   */
 
-/** AVOIDING SHARED STATE ----------------------------
- * What is state
- *  - A JS program stores data in variables and object.
- *    The constents of these storage locations at any given moment
- *    while the program is running is considered its state
- * What is shared state
- *  - shared state is any variable object, or memory sace that
- *    exists in a shared scope or as the property of an object
- *    being passed between scopes.
- *    A shared scope can include global scope or closore scops.
- */
+  /** AVOIDING MUTATIONS -------------------------------
+   *  MUTATIONS are chaging value of variable or object
+   *  IMMUTATIONS are variable or object cann't change value
+   */
+  const arr = [8, 2, 9, 7, 5];
+  Object.freeze(arr);
 
-/** AVOIDING MUTATIONS -------------------------------
- *  MUTATIONS are chaging value of variable or object
- *  IMMUTATIONS are variable or object cann't change value
- */
-const arr = [8, 2, 9, 7, 5];
-Object.freeze(arr);
+  const cloneObj = function(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  };
 
-const cloneObj = function(obj) {
-  return JSON.parse(JSON.stringify(obj));
-};
+  const newNums = cloneObj(arr).sort();
 
-const newNums = cloneObj(arr).sort();
+  console.log("arr sort: ", newNums);
+  console.log("original arr: ", arr);
+  const numbers = [10, 20, 30, 40];
+  const result = numbers.reduce((sum, number) => sum + number, 0);
+  console.log(result); // 100
 
-console.log("arr sort: ", newNums);
-console.log("original arr: ", arr);
-const numbers = [10, 20, 30, 40];
-const result = numbers.reduce((sum, number) => sum + number, 0);
-console.log(result); // 100
+  /** COMPOSITON
+   * - compose invoked function bottom to top
+   * - pipe invoked function top to bottom
+   */
 
-/** COMPOSITON
- * - compose invoked function bottom to top
- * - pipe invoked function top to bottom
- */
+  let str = "Innovation distringuishes between a leader and a folowwer.";
 
-let str = "Innovation distringuishes between a leader and a folowwer.";
-
-/** Procedures */
-/*let prepareString = function() {
+  /** Procedures */
+  /*let prepareString = function() {
   let arr = str
     .trim()
     .replace(/[?.,!]/g, "")
@@ -113,53 +113,54 @@ let str = "Innovation distringuishes between a leader and a folowwer.";
 
 console.log(prepareString(str)); */
 
-/** FUNCTION IN FUNCTIONAL PROGRAMMING */
-const trim = str => str.replace(/^\s*|\s*$/g, "");
-const noPunct = str => str.replace(/[?.,!]/g, "");
-const capitalize = str => str.toUpperCase();
-const breakout = str => str.split(" ");
-const noArticles = str => str !== "A" && str !== "AN" && str !== "THE";
-const filterArticles = arr => arr.filter(noArticles);
+  /** FUNCTION IN FUNCTIONAL PROGRAMMING */
+  const trim = str => str.replace(/^\s*|\s*$/g, "");
+  const noPunct = str => str.replace(/[?.,!]/g, "");
+  const capitalize = str => str.toUpperCase();
+  const breakout = str => str.split(" ");
+  const noArticles = str => str !== "A" && str !== "AN" && str !== "THE";
+  const filterArticles = arr => arr.filter(noArticles);
 
-//console.log(filterArticles(breakout(capitalize(noPunct(trim(str))))));
+  //console.log(filterArticles(breakout(capitalize(noPunct(trim(str))))));
 
-/** compse */
-const compose = function(...fns) {
-  return function(x) {
-    return fns.reduceRight(function(v, f) {
-      return f(v);
-    }, x);
+  /** compse */
+  const compose = function(...fns) {
+    return function(x) {
+      return fns.reduceRight(function(v, f) {
+        return f(v);
+      }, x);
+    };
   };
-};
 
-/** compose invoking from bottom to top */
-const prepareString = compose(
-  filterArticles,
-  breakout,
-  capitalize,
-  noPunct,
-  trim
-);
+  /** compose invoking from bottom to top */
+  const prepareString = compose(
+    filterArticles,
+    breakout,
+    capitalize,
+    noPunct,
+    trim
+  );
 
-/** pipe
- * 1. change reduceRight to reduce
- * 2. invoked function from top to bottom
- */
-const pipe = function(...fns) {
-  return function(x) {
-    return fns.reduce(function(v, f) {
-      return f(v);
-    }, x);
+  /** pipe
+   * 1. change reduceRight to reduce
+   * 2. invoked function from top to bottom
+   */
+  const pipe = function(...fns) {
+    return function(x) {
+      return fns.reduce(function(v, f) {
+        return f(v);
+      }, x);
+    };
   };
-};
 
-/** pipe invoking from top to bottom */
-// const prepareString = pipe(
-//   trim,
-//   noPunct,
-//   capitalize,
-//   breakout,
-//   filterArticles
-// );
+  /** pipe invoking from top to bottom */
+  // const prepareString = pipe(
+  //   trim,
+  //   noPunct,
+  //   capitalize,
+  //   breakout,
+  //   filterArticles
+  // );
 
-console.log(prepareString(str));
+  console.log(prepareString(str));
+})();
