@@ -59,7 +59,7 @@ const tailCallFactorial = (n, p = 1) =>
  * ans 120
  */
 
-const factorial = x => (x > 0 ? x * factorial2(x - 1) : 1);
+const factorial = x => (x > 0 ? x * factorial(x - 1) : 1);
 /** Recursion
  *   5 * factorial(4)
  *   5 * 4 * factorial(3)
